@@ -208,6 +208,14 @@ class ANFIS:
                                 '--', alpha=.5)
         #plt.show()
         fig.savefig(f"memberships.png")
+        #debug
+        file_path = "memberships.png"
+
+        # Check if the file exists
+        if os.path.exists(file_path):
+            print(f"{file_path} was saved successfully by anfis.")
+        else:
+            print(f"{file_path} does was not saved.")
 
     def fit(self, X, y, **kwargs):
         # save initial weights in the anfis class
