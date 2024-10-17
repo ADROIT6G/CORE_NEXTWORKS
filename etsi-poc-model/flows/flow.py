@@ -1,5 +1,4 @@
 from prefect import flow, task, get_run_logger, tags
-from prefect.variables import Variable
 from prefect.blocks.system import Secret
 import os
 import numpy as np
@@ -14,9 +13,9 @@ import anfis_layers
 from prefect_aws import MinIOCredentials
 from prefect_aws.s3 import S3Bucket
 
-os.environ['AWS_ACCESS_KEY_ID'] = Variables.get('minio-user')
-os.environ['AWS_SECRET_ACCESS_KEY'] = Variables.get('minio-pwd')
-os.environ['MLFLOW_S3_ENDPOINT_URL'] = Variables.get('mlflow-url')
+os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
+os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('mlflow-url').get()
 
 param = anfis_layers.fis_parameters(
         n_input=4,                # no. of Regressors
@@ -111,7 +110,7 @@ def log_model(parameters, model, model_name, example_data, experiment):
                 python_model=model,
                 artifact_path=model_name,
                 signature = signature,
-                code_paths=["flows/anfis_layers.py", "scaler_training_data.pkl"],
+                code_paths=["etsi-poc-model/flows/anfis_layers.py", "scaler_training_data.pkl"],
                 input_example=example_data,
             )
 @task
@@ -119,8 +118,9 @@ def model_save(anfis, modelname):
         anfis.model.save(modelname)
 @task
 def plot_membership_functions(anfis):
-        anfis.plotmfs( show_initial_weights=True)
+        membership_plot = anfis.plotmfs( show_initial_weights=True)
         anfis.model.summary()
+        return membership_plot
 
 ######################################################################################
 
@@ -148,4 +148,13 @@ def MLbasic(userdata: str = "Train"):
         compile_model(anfis, param)
         set_weights(model_to_save, anfis)
         mlflow_url = Secret.load("mlflow-url").get()
+                #debug
+        # Path to the file
+        file_path = "memberships.png"
+
+        # Check if the file exists
+        if os.path.exists(file_path):
+                print(f"{file_path} was found successfully.")
+        else:
+                print(f"{file_path} does not exist.")
         log_model(param, model_to_save, "ANFIS", input_data, 'ANFIS')
