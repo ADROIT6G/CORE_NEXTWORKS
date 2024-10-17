@@ -1,0 +1,31 @@
+# Generic metadata about this project
+name: training
+prefect-version: 2.20.3
+
+# Deployments section allows you to provide configuration for deploying flows
+deployments:
+  - name: k3s
+    entrypoint: flows/flow.py:MLbasic
+    work_pool:
+      name: kubernetes-work-pool
+      job_variables: {}
+      image: docker.io/eseder/prefect-anfis
+    version:  # Specify a version if needed; otherwise, you can remove this line
+    tags: []
+    description: "MLs:"
+    schedules: []
+
+    pull:
+      - prefect.deployments.steps.set_working_directory:
+          directory: /opt
+      - prefect.deployments.steps.git_clone:
+          repository: https://gitlab.nextworks.it/kd_nextworks/mlops/adroit-demo/etsi-poc-model.git
+          branch: master
+          #target_dir: '{{ steps.set_working_directory.directory }}/repo'
+          access_token: '{{ prefect.blocks.secret.deployment-k3s-mlbasic-repo-token }}'
+      # - prefect.deployments.steps.pip_install_requirements:
+      #     directory: '{{ steps.set_working_directory.directory }}/flows'  # Adjust according to your directory structure
+      #     requirements_file: requirements.txt
+      #     stream_output: True
+
+    parameters: {}
