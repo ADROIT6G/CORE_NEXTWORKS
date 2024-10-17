@@ -93,6 +93,15 @@ def fit_model(anfis, parameters, X_train, y_train, X_test, y_test):
         return anfis.fit(X_train, y_train, epochs=parameters.n_epochs, batch_size=parameters.batch_size, validation_data=(X_test, y_test))
 @task
 def set_weights(anfis, base_model):
+                        #debug
+        # Path to the file
+        file_path = "memberships.png"
+
+        # Check if the file exists
+        if os.path.exists(file_path):
+                print(f"{file_path} was found successfully.")
+        else:
+                print(f"{file_path} does not exist.")
         return anfis.model.set_weights(base_model.model.get_weights())
 @task
 def log_model(parameters, model, model_name, example_data, experiment):
@@ -148,13 +157,4 @@ def MLbasic(userdata: str = "Train"):
         compile_model(anfis, param)
         set_weights(model_to_save, anfis)
         mlflow_url = Secret.load("mlflow-url").get()
-                #debug
-        # Path to the file
-        file_path = "memberships.png"
-
-        # Check if the file exists
-        if os.path.exists(file_path):
-                print(f"{file_path} was found successfully.")
-        else:
-                print(f"{file_path} does not exist.")
         log_model(param, model_to_save, "ANFIS", input_data, 'ANFIS')
