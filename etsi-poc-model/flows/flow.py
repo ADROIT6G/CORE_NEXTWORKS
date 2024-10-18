@@ -13,9 +13,9 @@ import anfis_layers
 from prefect_aws import MinIOCredentials
 from prefect_aws.s3 import S3Bucket
 
-#os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
-#os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
-#os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('mlflow-url').get()
+os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
+os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('minio-data-url').get()
 
 param = anfis_layers.fis_parameters(
         n_input=4,                # no. of Regressors
@@ -111,6 +111,7 @@ def log_model(parameters, model, model_name, example_data, experiment):
             image_memberships = mlflow.Image("memberships.png")
             mlflow.log_params(parameters.__dict__)
             mlflow.log_image(image_memberships, key="memberships")
+        
             mlflow.log_artifact("memb_curves.npy")
             data = np.random.rand(1, parameters.n_input)
             answer = model(data)
