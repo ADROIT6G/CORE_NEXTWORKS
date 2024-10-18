@@ -111,7 +111,7 @@ def log_model(parameters, model, model_name, example_data, experiment):
         with mlflow.start_run():
             image_memberships = mlflow.Image("memberships.png")
             mlflow.log_params(parameters.__dict__)
-            mlflow.log_image(run.info.run_id, image_memberships, key="memberships")
+            mlflow.log_image(image_memberships, key="memberships")
             mlflow.log_artifact("memb_curves.npy")
             data = np.random.rand(1, parameters.n_input)
             answer = model(data)
