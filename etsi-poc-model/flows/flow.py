@@ -105,14 +105,13 @@ def set_weights(anfis, base_model):
         return anfis.model.set_weights(base_model.model.get_weights())
 @task
 def log_model(parameters, model, model_name, example_data, experiment):
-        mlflow.set_tracking_uri(os.environ['MLFLOW_S3_ENDPOINT_URL'])
+        mlflow.set_tracking_uri(Secret.load('mlflow-url').get())
         mlflow.set_experiment(experiment)
-        print(f"this is the MLFlow tracking URI: {os.environ['MLFLOW_S3_ENDPOINT_URL']}")
         with mlflow.start_run():
             image_memberships = mlflow.Image("memberships.png")
             mlflow.log_params(parameters.__dict__)
-            #mlflow.log_image(image_memberships, key="memberships")
-            #mlflow.log_artifact("memb_curves.npy")
+            mlflow.log_image(image_memberships, key="memberships")
+            mlflow.log_artifact("memb_curves.npy")
             data = np.random.rand(1, parameters.n_input)
             answer = model(data)
             signature = infer_signature(data, answer)
