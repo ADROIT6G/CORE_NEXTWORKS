@@ -13,9 +13,9 @@ import anfis_layers
 from prefect_aws import MinIOCredentials
 from prefect_aws.s3 import S3Bucket
 
-os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
-os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
-os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('mlflow-url').get()
+#os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
+#os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
+#os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('mlflow-url').get()
 
 param = anfis_layers.fis_parameters(
         n_input=4,                # no. of Regressors
