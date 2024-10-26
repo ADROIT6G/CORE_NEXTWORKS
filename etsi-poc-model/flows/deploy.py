@@ -54,7 +54,7 @@ spec:
       modelUri: s3://mlflow/1/16f54b71379947d99ec5683c2a886628/artifacts/avm-model
       envSecretRefName: bpk-seldon-init-container-secretb
 #      envSecretRefName: seldon-init-container-secret
-      name: classifier
+      name: inference
     name: demo
     replicas: 1
 """
