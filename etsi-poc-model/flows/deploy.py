@@ -60,7 +60,7 @@ CUSTOM_RESOURCE_INFO = dict(
 
 @task
 def get_model_location(model_name, model_version):
-    mlflow.set_tracking_uri(variables.get('mlflow_tracking_uri'))
+    mlflow.set_tracking_uri(Secret.load('mlflow-url').get())
     client = MlflowClient()
     if model_version:
       model_metadata = client.get_model_version(model_name, model_version)
