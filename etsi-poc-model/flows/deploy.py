@@ -63,11 +63,16 @@ CUSTOM_RESOURCE_INFO = dict(
 def get_model_location(model_name, model_version):
     mlflow.set_tracking_uri(Secret.load('mlflow-url').get())
     client = MlflowClient()
+
     if model_version:
-      model_metadata = client.get_model_version(model_name, model_version)
+        model_metadata = client.get_model_version(model_name, model_version)
+        # Here, model_metadata is a single ModelVersion object
+        latest_model_location = model_metadata.source
     else:
-      model_metadata = client.get_latest_versions(model_name)
-    latest_model_location = model_metadata[0].source
+        model_metadata_list = client.get_latest_versions(model_name)
+        # Here, model_metadata_list is a list of ModelVersion objects
+        latest_model_location = model_metadata_list[0].source if model_metadata_list else None
+
     return latest_model_location
 
 
