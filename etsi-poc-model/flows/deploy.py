@@ -6,6 +6,7 @@ from prefect import task, flow, tags, get_run_logger, variables
 from kubernetes import client, config
 import mlflow
 from mlflow import MlflowClient
+from prefect.blocks.system import Secret
 
 # image: seldonio/mlflowserver:1.18.2
 
