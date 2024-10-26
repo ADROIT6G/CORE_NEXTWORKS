@@ -23,13 +23,6 @@ spec:
         protocol: v2
         containers:
         - name: classifier
-          resources:
-            requests:
-              memory: "2Gi"  # Adjust this based on your application's needs
-              cpu: "500m"      # Adjust this based on your application's needs
-            limits:
-              memory: "4Gi"    # Set a maximum memory limit
-              cpu: "1000m"         # Set a maximum CPU limit
           livenessProbe:
             initialDelaySeconds: 500
             failureThreshold: 500
