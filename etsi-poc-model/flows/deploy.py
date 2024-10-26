@@ -25,11 +25,11 @@ spec:
         - name: classifier
           resources:
             requests:
-              memory: "512Mi"  # Adjust this based on your application's needs
+              memory: "2Gi"  # Adjust this based on your application's needs
               cpu: "500m"      # Adjust this based on your application's needs
             limits:
-              memory: "1Gi"    # Set a maximum memory limit
-              cpu: "1"         # Set a maximum CPU limit
+              memory: "4Gi"    # Set a maximum memory limit
+              cpu: "1000m"         # Set a maximum CPU limit
           livenessProbe:
             initialDelaySeconds: 500
             failureThreshold: 500
