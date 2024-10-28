@@ -171,3 +171,29 @@ def MLbasic(userdata: str = "Train"):
         set_weights(model_to_save, anfis)
         mlflow_url = Secret.load("mlflow-url").get()
         log_model(param, model_to_save, "ANFIS", input_data, 'ANFIS')
+
+
+
+#################main flow#############################################################
+# Main flow that calls both subflows
+@flow(name="main_flow")
+def main_flow():
+    seldon_subflow()  # Call the subflow that uses Seldon
+    default_subflow()  # Call the subflow that uses the default environment
+
+# Set up deployment only for the seldon_subflow to use "seldon" environment
+seldon_deployment = Deployment.build_from_flow(
+    flow=seldon_subflow,
+    name="seldon-subflow-deployment",
+    environment="seldon"  # Specify Seldon environment here
+)
+
+# Deploy the main flow
+main_deployment = Deployment.build_from_flow(
+    flow=main_flow,
+    name="main-flow-deployment"
+)
+
+# Apply deployments
+seldon_deployment.apply()
+main_deployment.apply()
