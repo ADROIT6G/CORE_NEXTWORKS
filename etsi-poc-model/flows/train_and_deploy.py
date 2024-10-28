@@ -1,10 +1,12 @@
-from prefect import flow, task, get_run_logger, tags
+import prefect
+from prefect import flow, task, get_run_logger, tags, variables
 from prefect.blocks.system import Secret
 import os
 import numpy as np
 import pandas as pd
 import mlflow
 import mlflow.keras
+from mlflow import MlflowClient
 from mlflow.models import infer_signature
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
@@ -12,6 +14,9 @@ import cloudpickle as cp
 import anfis_layers 
 from prefect_aws import MinIOCredentials
 from prefect_aws.s3 import S3Bucket
+import yaml
+from kubernetes import client, config
+
 
 os.environ['AWS_ACCESS_KEY_ID'] = Secret.load('minio-user').get()
 os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
