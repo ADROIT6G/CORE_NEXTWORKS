@@ -122,6 +122,7 @@ def log_model(parameters, model, model_name, example_data, experiment):
                 signature = signature,
                 code_paths=["etsi-poc-model/flows/anfis_layers.py", "scaler_training_data.pkl"],
                 input_example=example_data,
+                registered_model_name=model_name,
             )
 @task
 def model_save(anfis, modelname):
