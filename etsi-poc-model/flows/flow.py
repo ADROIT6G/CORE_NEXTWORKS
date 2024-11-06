@@ -26,7 +26,7 @@ param = anfis_layers.fis_parameters(
         loss='mse',               # mse / mae / huber_loss / mean_absolute_percentage_error / ...
         n_epochs=34,              # 10 / 25 / 50 / 100 / ...
         mf_range = (-2,2),            # range of membership functions ((0.7,1.3),
-        memberships = ['URLLC_BytesReceived', 'URLLC_BytesSent', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']
+        memberships = ['BytesReceived_URLLC', 'BytesSent_URLLC', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']
     )
 
 @task
@@ -61,7 +61,7 @@ def fetch_data():
 @task
 def generate_training_data(combined_df):
         combined_df = combined_df.sample(frac=1).reset_index(drop=True) #shuffle rows
-        X = combined_df[['URLLC_BytesReceived', 'URLLC_BytesSent', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']].to_numpy()
+        X = combined_df[['BytesReceived_URLLC', 'BytesSent_URLLC', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']].to_numpy()
         Y = combined_df['membership'].to_numpy()
         n_rows = (len(X) // param.batch_size) * param.batch_size
         return X[:n_rows], Y[:n_rows], combined_df
