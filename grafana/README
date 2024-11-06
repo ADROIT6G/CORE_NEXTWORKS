@@ -1,0 +1,8 @@
+sudo docker build -t eseder/mqtt_influx_transform .
+sudo docker push eseder/mqtt_influx_transform
+sudo docker run -d --restart unless-stopped --name visualization eseder/mqtt_influx_transform
+
+sudo docker build -t rd-registry.nextworks.it/mqtt_influx_transform .
+sudo docker push rd-registry.nextworks.it/mqtt_influx_transform
+
+ docker run -d --restart unless-stopped --name visualization rd-registry.nextworks.it/mqtt_influx_transform
