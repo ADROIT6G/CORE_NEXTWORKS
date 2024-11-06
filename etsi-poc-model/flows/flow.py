@@ -18,7 +18,7 @@ os.environ['AWS_SECRET_ACCESS_KEY'] = Secret.load('minio-pwd').get()
 os.environ['MLFLOW_S3_ENDPOINT_URL'] = Secret.load('minio-data-url').get()
 
 param = anfis_layers.fis_parameters(
-        n_input=4,                # no. of Regressors
+        n_input=2,                # no. of Regressors
         n_memb=3,                 # no. of fuzzy memberships
         batch_size=64,            # 16 / 32 / 64 / ...
         memb_func='gaussian',     # 'gaussian' / 'gbellmf' / 'sigmoid' /'triangle'(use rmsprop)
@@ -61,7 +61,8 @@ def fetch_data():
 @task
 def generate_training_data(combined_df):
         combined_df = combined_df.sample(frac=1).reset_index(drop=True) #shuffle rows
-        X = combined_df[['BytesReceived_URLLC', 'BytesSent_URLLC', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']].to_numpy()
+        # X = combined_df[['BytesReceived_URLLC', 'BytesSent_URLLC', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']].to_numpy()
+        X = combined_df[['URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']].to_numpy()
         Y = combined_df['membership'].to_numpy()
         n_rows = (len(X) // param.batch_size) * param.batch_size
         return X[:n_rows], Y[:n_rows], combined_df
