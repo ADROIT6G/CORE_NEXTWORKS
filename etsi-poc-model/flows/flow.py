@@ -26,7 +26,7 @@ param = anfis_layers.fis_parameters(
         loss='mse',               # mse / mae / huber_loss / mean_absolute_percentage_error / ...
         n_epochs=34,              # 10 / 25 / 50 / 100 / ...
         mf_range = (-2,2),            # range of membership functions ((0.7,1.3),
-        memberships = ['BytesReceived_URLLC', 'BytesSent_URLLC', 'URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']
+        memberships = ['URLLC_Received_thrp_Mbps', 'URLLC_Sent_thrp_Mbps']
     )
 
 @task
@@ -145,7 +145,7 @@ def MLbasic(userdata: str = "Train"):
         logger.info(f"minIO data: {data.head(10)}!")
 
         X_raw, Y_switch, combined_df = generate_training_data(data)
-        X, scaler = normalize_data(X_raw, [0, 1, 2, 3])
+        X, scaler = normalize_data(X_raw, [0, 1])
 
         # Model Training
         anfis = ANFISModel(param)
