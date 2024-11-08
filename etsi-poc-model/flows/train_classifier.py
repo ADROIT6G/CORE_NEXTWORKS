@@ -103,6 +103,7 @@ def log_model(train_x,train_y, test_x, test_y):
                 sk_model=lr,
                 artifact_path="sklearn-model",
                 signature=signature,
+                registered_model_name="Classifier",
             )
     test_y = test_y.reshape(-1)
     print(test_y)
