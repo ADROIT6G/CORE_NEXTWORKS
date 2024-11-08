@@ -9,7 +9,7 @@ import cloudpickle as cp
 from prefect_aws import MinIOCredentials
 from prefect_aws.s3 import S3Bucket
 
-import IPython.display
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
