@@ -11,16 +11,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 from sklearn.preprocessing import MinMaxScaler
-
-#import tensorflow_model_optimization as tfmot
-#from tensorflow_model_optimization.quantization.keras import quantize_annotate_layer, quantize_apply, quantize_annotate_model
 import sys
-# parameter class fis parameters
+
 
 # Clear all previously registered custom objects
 get_custom_objects().clear()
 
-class fis_parameters():
+class parameters():
     def __init__(self, memberships: list, n_input: int = 3, n_memb: int = 3, batch_size: int = 16, n_epochs: int = 25, memb_func: str = 'gaussian', optimizer: str = 'sgd', loss: str = 'mse', mf_range: tuple = (-2,2)):
         self.n_input = n_input  # no. of Regressors
         self.n_memb = n_memb  # no. of fuzzy memberships
@@ -36,7 +33,7 @@ class fis_parameters():
 
 # Main Class ANFIS
 class ANFIS:
-    def __init__(self, memberships: list, n_input: int, n_memb: int, batch_size: int = 16, memb_func: str = 'gaussian', mf_range: tuple = (-2,2), name: str = 'MyAnfis'):
+    def __init__(self, memberships: list, n_input: int, n_memb: int, batch_size: int = 16, memb_func: str = 'gaussian', mf_range: tuple = (-2,2), name: str = 'My_Anfis'):
         self.memberships = memberships
         self.n = n_input
         self.m = n_memb
@@ -61,7 +58,12 @@ class ANFIS:
     def __call__(self, X):
         if self.is_scaler_set():
             X[:, :] = self.scaler.transform(X[:, :])
-        return self.model.predict(X, batch_size=self.batch_size)
+        #return self.model.predict(X, batch_size=self.batch_size)
+        return round(self.model.predict(X, batch_size=self.batch_size))
+    
+    def predict(self, x):
+        return self.__call__(x)        
+
     
     def update_scaler(self, scaler_filename):
         if os.path.exists(scaler_filename):
@@ -130,7 +132,7 @@ class ANFIS:
                 ),
                 0
                 )
-                #print(f"initial weights: {self.init_weights}")
+                print(f"initial weights: {self.init_weights}")
                 
         if self.memb_func == 'gaussian':
             mus, sigmas = np.around(self.model.get_layer(
@@ -151,7 +153,7 @@ class ANFIS:
                     n_memb, n_input, 1), sigmas_init.reshape(n_memb, n_input, 1)
                 init_curves = np.exp(-np.square((xn - mus_init)
                                                 ) / np.square(sigmas_init))
-                #print(f"initial weights: {self.init_weights}")
+                print(f"initial weights: {self.init_weights}")
         elif self.memb_func == 'gbellmf':
             a, b, c = np.around(self.model.get_layer(
                 'fuzzyLayer').get_weights(), 2)
@@ -208,14 +210,6 @@ class ANFIS:
                                 '--', alpha=.5)
         #plt.show()
         fig.savefig(f"memberships.png")
-        #debug
-        file_path = "memberships.png"
-
-        # Check if the file exists
-        if os.path.exists(file_path):
-            print(f"{file_path} was saved successfully by anfis.")
-        else:
-            print(f"{file_path} does was not saved.")
 
     def fit(self, X, y, **kwargs):
         # save initial weights in the anfis class
