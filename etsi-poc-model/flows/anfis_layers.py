@@ -57,7 +57,7 @@ class ANFIS:
 
     def __call__(self, X):
         if self.is_scaler_set():
-            X[:, :] = self.scaler.transform(X[:, :])
+            X[:] = self.scaler.transform(X[:])
         #return self.model.predict(X, batch_size=self.batch_size)
         return round(self.model.predict(X, batch_size=self.batch_size))
     
