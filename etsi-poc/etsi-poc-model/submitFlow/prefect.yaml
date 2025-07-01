@@ -5,7 +5,7 @@ prefect-version: 2.20.3
 # Deployments section allows you to provide configuration for deploying flows
 deployments:
   - name: k3s
-    entrypoint: etsi-poc-model/flows/flow.py:MLbasic
+    entrypoint: etsi-poc/etsi-poc-model/flows/flow.py:MLbasic
     work_pool:
       name: kubernetes-work-pool
       job_variables: {}
